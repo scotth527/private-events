@@ -51,6 +51,8 @@ group :development do
   gem 'better_errors', '~> 2.8', '>= 2.8.3'
 
   gem 'guard-livereload', '~> 2.5', require: false
+
+  gem 'rb-readline'
 end
 
 group :test do

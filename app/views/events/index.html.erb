@@ -1,0 +1,26 @@
+
+<% if @events %>
+    <% @events.each do |event| %>
+      <div class="col-6 mx-auto border border-dark rounded mt-3 p-3">
+          <h4><%= event.title %></h4>
+
+          <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
+
+          <p><%= event.description %></p>
+
+          <p><%= event.date %></p>
+
+          <strong><p><%= event.location %></p></strong>
+
+          <div>
+              <span>Host: </span>
+              <div><%= event.host.username %></div>
+          </div>
+
+          <br/>
+
+          <h5><ul class="p-0">Comments</ul></h5>
+
+      </div>
+    <% end %>
+<% end %>

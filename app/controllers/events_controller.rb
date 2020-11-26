@@ -17,16 +17,17 @@ class EventsController < ApplicationController
   def create
     @event = current_user.events.build(post_params)
     @events = Event.all
-  end
 
-  respond_to do |format|
-     if @event.save
-       format.html { redirect_to root_path, notice: 'Event was successfully created.' }
-       format.json { render :show, status: :created, location: @event }
-     else
-       format.html { render :index }
-       format.json { render json: @event.errors, status: :unprocessable_entity }
-     end
+    respond_to do |format|
+       if @event.save
+         format.html { redirect_to root_path, notice: 'Event was successfully created.' }
+         format.json { render :show, status: :created, location: @event }
+       else
+         format.html { render :index }
+         format.json { render json: @event.errors, status: :unprocessable_entity }
+       end
+
+    end
  end
 
 
@@ -35,6 +36,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:title, :description, :location,:date , :user_id)
+      params.require(:event).permit(:title, :description, :location,:date , :user_id)
     end
 end

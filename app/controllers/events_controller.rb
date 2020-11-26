@@ -27,5 +27,14 @@ class EventsController < ApplicationController
        format.html { render :index }
        format.json { render json: @event.errors, status: :unprocessable_entity }
      end
-   end
+ end
+
+
+ private
+
+
+    # Only allow a list of trusted parameters through.
+    def post_params
+      params.require(:post).permit(:title, :description, :location,:date , :user_id)
+    end
 end

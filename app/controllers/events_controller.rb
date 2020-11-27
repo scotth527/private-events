@@ -3,7 +3,12 @@ class EventsController < ApplicationController
 
   def show
     @events = Event.all.order("created_at DESC")
-    puts @events
+
+    if (@event = Event.find_by_id(params[:id])).present?
+      @event = Event.find(params[:id])
+    else
+      content_not_found
+    end
   end
 
   def new

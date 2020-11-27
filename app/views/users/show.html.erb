@@ -1,1 +1,17 @@
-<%= @user.email %>
+
+<div>
+    <h1><%= @user.email %></h1>
+
+    <% if @user.events.length() > 0%>
+    <h4>My Events</h4>
+
+    <ul>
+        <% @user.events.each do |event| %>
+            <li>
+                <%= link_to event.title, event %>
+            </li>
+        <% end %>
+    </ul>
+    <% end %>
+
+</div>

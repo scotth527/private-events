@@ -2,7 +2,7 @@
 <% if @events %>
     <% @events.each do |event| %>
       <div class="col-6 mx-auto border border-dark rounded mt-3 p-3">
-          <h4><%= event.title %></h4>
+          <h4> <%= link_to event.title, event %></h4>
 
           <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
 
@@ -14,7 +14,7 @@
 
           <div>
               <span>Host: </span>
-              <div><%= event.host.username %></div>
+              <div><%= event.creator.username %></div>
           </div>
 
           <br/>

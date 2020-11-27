@@ -20,6 +20,7 @@
               <div class="text-light vertical-center mr-2 mt-2">
                   <span>Welcome </span>
                   <%= current_user.username || "No Username Available" %>
+                  <%= link_to 'Create Event', new_event_path, class:"btn btn-primary" %>
               </div>
               <%= link_to "Logout", destroy_user_session_path, method: :delete,
               class:"btn btn-outline-danger my-2 my-sm-0" %>

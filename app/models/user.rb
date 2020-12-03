@@ -7,5 +7,5 @@ class User < ApplicationRecord
 
   has_many :events, dependent: :destroy
   has_many :rsvps
-  has_many :attended_events, through: :rsvps, class_name: :Events
+  has_many :attended_events, through: :rsvps, class_name: 'Event'
 end

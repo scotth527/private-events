@@ -9,4 +9,53 @@
     <div><%= @event.location %></div>
 
     <div><%= @event.date %></div>
+
+    <div>
+        <p>Number of attendees:
+            <span>
+                <%= @event.rsvps.select {|attendee| attendee.status == "Attending" }.length()  %>
+            </span>
+        </p>
+        <p>
+            <span>Attending</span>
+            <ul>
+
+                    <% @event.rsvps.each do |attendee| %>
+                        <% if attendee.status == "Attending" %>
+                            <li>
+                                <%= attendee.attendee.username %>
+                            </li>
+                        <% end %>
+                    <% end %>
+
+            </ul>
+
+            <span>Pending</span>
+            <ul>
+
+                    <% @event.rsvps.each do |attendee| %>
+                        <% if attendee.status == "Pending" %>
+                            <li>
+                                <%= attendee.attendee.username %>
+                            </li>
+                        <% end %>
+                    <% end %>
+
+            </ul>
+
+            <span>Declined</span>
+            <ul>
+
+                    <% @event.rsvps.each do |attendee| %>
+                        <% if (attendee.status != "Pending" && attendee.status != "Attending"  ) %>
+                            <li>
+                                <%= attendee.attendee.username %>
+                            </li>
+                        <% end %>
+                    <% end %>
+
+            </ul>
+        </p>
+    </div>
+
 </div>

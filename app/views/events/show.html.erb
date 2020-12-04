@@ -2,13 +2,19 @@
 <div>
     <h1><%= @event.title %></h1>
 
+    <h4>Description: </h4>
     <p><%= @event.description %></p>
 
+    <h4>Creator: </h4>
     <strong><%= link_to @event.creator.username , @event.creator %></strong>
 
+    <h4>Location: </h4>
     <div><%= @event.location %></div>
 
-    <div><%= @event.date %></div>
+    <% if @event.date.present? %>
+    <h4>Date: </h4>
+    <div><%= @event.date.strftime("%B %d %Y") %></div>
+    <% end %>
 
     <div>
         <p>Number of attendees:
@@ -57,5 +63,7 @@
             </ul>
         </p>
     </div>
+
+
 
 </div>

@@ -16,11 +16,21 @@
     <h4>Previously attended events</h4>
 
     <ul>
-        <% @user.attended_events.select { |event|
-            Time.now()
-
+        <% @user.attended_events.select { |invited_event|
+            if invited_event.date.present?
+             # event.date < Date.today
+                p invited_event
+                p "date"
+                p invited_event.date
+                p invited_event.date.class
+                p "Today date"
+                p Date.today
+                p invited_event.date.past?
+                return Date.parse(invited_event.date).past?
+            end
         }.each do |event| %>
             <li>
+                <%= event.date %>
                 <%= link_to event.title, event %>
             </li>
         <% end %>
@@ -29,8 +39,16 @@
     <h4>Upcoming events</h4>
 
     <ul>
-        <% @user.attended_events.select { |event|
-            return true
+        <% @user.attended_events.select { |invited_event|
+            if invited_event.date.present?
+                p invited_event
+                p "date"
+                p invited_event.date
+                p invited_event.date.class
+                p "Today date"
+                p Date.today
+                p invited_event.date.past?
+            end
 
            }.each do |event| %>
             <li>

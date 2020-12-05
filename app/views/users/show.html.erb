@@ -19,6 +19,8 @@
         <% @user.attended_events.select { |invited_event|
             if invited_event.date.present?
              # event.date < Date.today
+                p "Original array"
+                p  @user.attended_events
                 p invited_event
                 p "date"
                 p invited_event.date
@@ -26,7 +28,7 @@
                 p "Today date"
                 p Date.today
                 p invited_event.date.past?
-                return Date.parse(invited_event.date).past?
+                invited_event.date.past?
             end
         }.each do |event| %>
             <li>
@@ -48,6 +50,7 @@
                 p "Today date"
                 p Date.today
                 p invited_event.date.past?
+                !invited_event.date.past?
             end
 
            }.each do |event| %>

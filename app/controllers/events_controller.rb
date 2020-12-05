@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, only:[:new, :create, :update, :delete]
+ 
 
   def show
     @events = Event.all.order("created_at DESC")
@@ -16,7 +17,8 @@ class EventsController < ApplicationController
   end
 
   def index
-    @events = Event.all
+    @events = Event.all.select { |event| event.date.present? }
+
   end
 
   def create
@@ -37,7 +39,6 @@ class EventsController < ApplicationController
 
 
  private
-
 
     # Only allow a list of trusted parameters through.
     def post_params

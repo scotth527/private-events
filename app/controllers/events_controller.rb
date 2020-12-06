@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, only:[:new, :create, :update, :delete]
- 
+
 
   def show
     @events = Event.all.order("created_at DESC")
@@ -18,7 +18,8 @@ class EventsController < ApplicationController
 
   def index
     @events = Event.all.select { |event| event.date.present? }
-
+    @past_events = Event.past_events(Date.today).order('date DESC')
+    @upcoming_events = Event.upcoming_events(Date.today).sort_by &:date
   end
 
   def create

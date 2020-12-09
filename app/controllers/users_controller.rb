@@ -12,6 +12,7 @@ class UsersController < ApplicationController
           content_not_found
         end
     end
+    
 
     private
     def only_see_own_page

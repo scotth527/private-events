@@ -4,7 +4,7 @@ class EventsController < ApplicationController
 
   def show
     @events = Event.all.order("created_at DESC")
-
+    @users = User.all.select{ |user| user.username != current_user.username }
     if (@event = Event.find_by_id(params[:id])).present?
       @event = Event.find(params[:id])
     else

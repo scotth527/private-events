@@ -16,10 +16,31 @@
     <div><%= @event.date.strftime("%B %d %Y") %></div>
     <% end %>
 
+    <% if @event.creator.username == current_user.username %>
+
+        <%= form_with url: "/rsvps", method: :post do |form| %>
+          <%= form.hidden_field :event_id, :value => @event.id  %>
+          <%= form.hidden_field :status, :value => "Pending"  %>
+
+
+          <%= form.label :user_id, "Invite User:" %>
+
+          <%= form.select :user_id, options_for_select(@users.collect{ |u| [u.username, u.id] }), class:"form-control" %>
+          <%= form.submit "Invite" %>
+        <% end %>
+
+    <% end %>
+
     <%= button_to "Attend",
-        rsvps_path(event_id: @event.id, user_id: current_user.id, status: "Attending"), 
+        rsvps_path(event_id: @event.id, user_id: current_user.id, status: "Attending"),
         method: :post,
         class:"btn btn-success " %>
+
+    <%= button_to "Decline",
+        rsvps_path(event_id: @event.id, user_id: current_user.id, status: ""),
+        method: :put,
+        class:"btn btn-danger " %>
+
     <div>
         <p>Number of attendees:
             <span>

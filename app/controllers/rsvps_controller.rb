@@ -6,16 +6,27 @@ class RsvpsController < ApplicationController
         @rsvp = Rsvp.new(event_id: @event.id, user_id: params[:user_id], status: params[:status] )
         if @rsvp.save
             flash[:notice] = "Success"
-            @rsvp.status = "Attending"
+            redirect_to @event
+        else
+            p "Errors"
+            p @rsvp.errors.full_messages
+            p "Params"
+            p params
+            flash[:alert] = 'Something went wrong. Try again later.'
+            redirect_to event_path(@event)
+        end
+
+    end
+
+    def update
+        @rsvp = Rsvp.find_by_id(params[:rsvp_id])
+        if @rsvp.update(status: params[:status])
+            flash[:notice] = "Success"
             redirect_to @event
         else
             flash[:alert] = 'Something went wrong. Try again later.'
             redirect_to event_path(@event)
         end
-    end
-
-    def update
-
     end
 
     def destroy

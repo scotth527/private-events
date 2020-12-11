@@ -28,6 +28,9 @@ class EventsController < ApplicationController
 
     respond_to do |format|
        if @event.save
+         ##By default creator of event is going to event
+         @rsvp = Rsvp.new( event_id: @event.id , user_id: current_user.id, status: "Attending")
+         @rsvp.save
          format.html { redirect_to root_path, notice: 'Event was successfully created.' }
          format.json { render :show, status: :created, location: @event }
        else

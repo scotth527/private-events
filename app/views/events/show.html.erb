@@ -16,7 +16,9 @@
     <div><%= @event.date.strftime("%B %d %Y") %></div>
     <% end %>
 
-    <% if @event.creator.username == current_user.username %>
+    <% if (@event.creator.username == current_user.username && @users.select {
+        | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
+    }.length() > 0 ) %>
 
         <%= form_with url: "/rsvps", method: :post do |form| %>
           <%= form.hidden_field :event_id, :value => @event.id  %>
@@ -25,22 +27,35 @@
 
           <%= form.label :user_id, "Invite User:" %>
 
-          <%= form.select :user_id, options_for_select(@users.collect{ |u| [u.username, u.id] }), class:"form-control" %>
+          <%= form.select :user_id, options_for_select(@users.select {
+              | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
+          }.collect{ |u| [u.username, u.id] }), class:"form-control" %>
           <%= form.submit "Invite" %>
         <% end %>
 
     <% end %>
 
+    <%# Check if user is already been invited %>
     <% if @event.attendees.any? {|attendee| attendee.id == current_user.id } %>
         <div>
         <%= button_to "Attend",
-            rsvps_path(event_id: @event.id, user_id: current_user.id, status: "Attending"),
-            method: :post,
+            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                p "Attendee"
+                p attendee
+                attendee.user_id == current_user.id
+            }[0].id,
+            event_id: @event.id, user_id: current_user.id, status: "Attending"),
+            method: :patch,
             class:"btn btn-success " %>
 
         <%= button_to "Decline",
-            rsvps_path(event_id: @event.id, user_id: current_user.id, status: ""),
-            method: :put,
+            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                p "Attendee"
+                p attendee
+                attendee.user_id == current_user.id
+            }[0].id,
+            event_id: @event.id, user_id: current_user.id, status: "Declined"),
+            method: :patch,
             class:"btn btn-danger " %>
         </div>
     <% end %>

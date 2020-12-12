@@ -29,6 +29,17 @@
             <% @upcoming_events.each do |event| %>
                 <li>
                     <%= link_to event.title, event %>
+                    <% p "Event rsvps"  %>
+                    <% p event.rsvps  %>
+                    <%= button_to "Delete Invitation",
+                        rsvp_path(id: event.rsvps.select { |attendee|
+                            p 'Rsvp attendee'
+                            p attendee
+                            attendee.user_id == current_user.id
+                        }[0].id),
+                        method: :delete,
+                        class:"btn btn-danger " %>
+                    </div>
                 </li>
             <% end %>
         </ul>

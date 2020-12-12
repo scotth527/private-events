@@ -19,6 +19,7 @@ class RsvpsController < ApplicationController
     end
 
     def update
+        @event = Event.find(params[:event_id])
         @rsvp = Rsvp.find_by_id(params[:rsvp_id])
         if @rsvp.update(status: params[:status])
             flash[:notice] = "Success"
@@ -30,17 +31,19 @@ class RsvpsController < ApplicationController
     end
 
     def destroy
-        event = Event.find(params[:event_id])
-        rsvp = Rsvp.find(params[:id])
-        if current_user == event.creator
-          enrollment.destroy
-          flash[:notice] = "The invitation is cancelled!"
-        else
-          enrollment.status = 'invited'
-          enrollment.save
-          flash[:notice] = "You have dropped the enrollment for the #{event.name}!"
-        end
 
+        # p "Destroy Params"
+        # p params
+        @rsvp = Rsvp.find(params[:id])
+        # p "Rsvp"
+        # p @rsvp
+        if @rsvp.destroy
+          p "This was successful"
+          flash[:notice] = "The invitation is removed."
+        else
+          flash[:alert] = "Something went wrong. Try again later.!"
+        end
+        redirect_to user_path(current_user)
   end
 
 end

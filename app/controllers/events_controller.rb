@@ -1,12 +1,14 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, only:[:new, :create, :update, :delete]
+  before_action :authenticate_user!, only:[:new, :create, :index, :show, :update, :delete]
 
 
   def show
     @events = Event.all.order("created_at DESC")
-    @users = User.all.select{ |user| user.username != current_user.username }
+
     if (@event = Event.find_by_id(params[:id])).present?
       @event = Event.find(params[:id])
+
+      @users = User.all.select{ |user| user.username != current_user.username}
     else
       content_not_found
     end

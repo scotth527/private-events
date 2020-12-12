@@ -8,11 +8,13 @@ class UsersController < ApplicationController
 
           @past_events = @user.attended_events.past_events(Date.today).order('date DESC')
           @upcoming_events = @user.attended_events.upcoming_events(Date.today).sort_by &:date
+          p "Upcoming events"
+          p @upcoming_events
         else
           content_not_found
         end
     end
-    
+
 
     private
     def only_see_own_page

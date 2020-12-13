@@ -1,75 +1,74 @@
 
 <% if @events %>
 
-    <h4>Upcoming Events</h4>
-    <% @upcoming_events.select { |past_event|
-        past_event.present?
-    }.each do |event| %>
+    <div class="container">
+        <h4>Upcoming Events</h4>
+        <div class="row">
+        <% @upcoming_events.select { |past_event| past_event.present?}.each do |event| %>
+            <div class="col-3 border border-dark rounded mr-2 mt-3 p-3">
+                <h4> <%= link_to event.title, event %></h4>
 
-    <div class="col-6 mx-auto border border-dark rounded mt-3 p-3">
-        <h4> <%= link_to event.title, event %></h4>
+                <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
 
-        <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
+                <h4>Description: </h4>
+                <p><%= event.description %></p>
 
-        <h4>Description: </h4>
-        <p><%= event.description %></p>
+                <% if event.date.present? %>
+                <h4>Date</h4>
+                <p><%= event.date.strftime("%B %d %Y") %></p>
+                <% end %>
 
-        <% if event.date.present? %>
-        <h4>Date</h4>
-        <p><%= event.date.strftime("%B %d %Y") %></p>
-        <% end %>
+                <h4>Location</h4>
+                <strong><p><%= event.location %></p></strong>
 
-        <h4>Location</h4>
-        <strong><p><%= event.location %></p></strong>
+                <div>
+                    <span>Host: </span>
+                    <div><%= event.creator.username %></div>
+                </div>
+                <br/>
 
-        <div>
-            <span>Host: </span>
-            <div><%= event.creator.username %></div>
-        </div>
-        <br/>
-
-        <h5>Number of attending</h5>
-        <p>
-            <%= event.attendees.length() %>
-        </p>
-
-    </div>
-
-    <% end %>
-
-
-    <h4>Past Events</h4>
-
-        <% @past_events.select { |past_event|
-            past_event.present?
-        }.each do |event| %>
-        <div class="col-6 mx-auto border border-dark rounded mt-3 p-3">
-            <h4> <%= link_to event.title, event %></h4>
-
-            <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
-
-            <h4>Description: </h4>
-            <p><%= event.description %></p>
-
-            <% if event.date.present? %>
-            <h4>Date</h4>
-            <p><%= event.date.strftime("%B %d %Y") %></p>
-            <% end %>
-
-            <h4>Location</h4>
-            <strong><p><%= event.location %></p></strong>
-
-            <div>
-                <span>Host: </span>
-                <div><%= event.creator.username %></div>
+                <h5>Number of attending</h5>
+                <p>
+                    <%= event.attendees.length() %>
+                </p>
             </div>
-            <br/>
+        <% end %>
+        </div>
 
-            <h5>Number of attending</h5>
-            <p>
-                <%= event.attendees.length() %>
-            </p>
 
+        <h4>Past Events</h4>
+
+            <% @past_events.select { |past_event|
+                past_event.present?
+            }.each do |event| %>
+            <div class="col-6 mx-auto border border-dark rounded mt-3 p-3">
+                <h4> <%= link_to event.title, event %></h4>
+
+                <p>Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
+
+                <h4>Description: </h4>
+                <p><%= event.description %></p>
+
+                <% if event.date.present? %>
+                <h4>Date</h4>
+                <p><%= event.date.strftime("%B %d %Y") %></p>
+                <% end %>
+
+                <h4>Location</h4>
+                <strong><p><%= event.location %></p></strong>
+
+                <div>
+                    <span>Host: </span>
+                    <div><%= event.creator.username %></div>
+                </div>
+                <br/>
+
+                <h5>Number of attending</h5>
+                <p>
+                    <%= event.attendees.length() %>
+                </p>
+
+            </div>
         </div>
         <% end %>
 

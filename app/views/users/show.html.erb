@@ -32,11 +32,7 @@
                     <% p "Event rsvps"  %>
                     <% p event.rsvps  %>
                     <%= button_to "Delete Invitation",
-                        rsvp_path(id: event.rsvps.select { |attendee|
-                            p 'Rsvp attendee'
-                            p attendee
-                            attendee.user_id == current_user.id
-                        }[0].id),
+                        rsvp_path(user_id: current_user.id , event_id: event.id),
                         method: :delete,
                         class:"btn btn-danger " %>
                     </div>

@@ -34,7 +34,12 @@ class RsvpsController < ApplicationController
 
         # p "Destroy Params"
         # p params
-        @rsvp = Rsvp.find(params[:id])
+        @rsvp
+        # if(params[:id])
+        #     @rsvp = Rsvp.find(params[:id])
+        # elseif (params[:event_id] && params[:user_id])
+        @rsvp = Rsvp.find_by(user_id: params[:user_id], event_id: params[:event_id])
+        # end
         # p "Rsvp"
         # p @rsvp
         if @rsvp.destroy

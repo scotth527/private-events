@@ -1,0 +1,14 @@
+
+
+<div class="card col-2 mb-3 p-4">
+  <div class="card-body">
+    <h5 class="card-title mb-2"><%= link_to event.title, event %></h5>
+    <h6 class="card-subtitle mb-2 text-muted"> Date: <%= event.date.strftime("%B %d %Y") %></h6>
+    <h6 class="card-subtitle mt-3 mb-2">Description: </h6>
+    <p class="card-text mb-3"><%= event.description %></p>
+    <div>Host: <%= event.creator.username %></div>
+    <p class="card-text text-muted">Created <%= distance_of_time_in_words(Time.now, event.created_at) %> ago </p>
+    <%= link_to "See details", event %>
+
+  </div>
+</div>

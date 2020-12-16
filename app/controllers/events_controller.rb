@@ -1,6 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, only:[:new, :create, :index, :show, :update, :delete]
-
+  before_action :authenticate_user!, only:[:new, :create, :index, :edit, :show, :update, :delete]
 
   def show
     @events = Event.all.order("created_at DESC")
@@ -41,6 +40,23 @@ class EventsController < ApplicationController
        end
 
     end
+ end
+
+ def update
+     @event = Event.find_by_id(params[:id])
+     respond_to do |format|
+       if @event.update(post_params)
+         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+         format.json { render :show, status: :ok, location: @event }
+       else
+         format.html { render :edit }
+         format.json { render json: @event.errors, status: :unprocessable_entity }
+       end
+     end
+ end
+
+ def edit
+     @event = Event.find_by_id(params[:id])
  end
 
 

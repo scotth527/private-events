@@ -1,113 +1,132 @@
 
 <div class="row">
     <div class="col-11 mx-auto">
-    <div class="col-12 text-center mt-3 mb-3">
-        <h1>Profile: <%= @user.username %> </h1>
+        <div class="col-12 text-center mt-3 mb-3">
+            <h1>Profile: <%= @user.username %> </h1>
+        </div>
+
+        <div class="mt-3 d-flex justify-content-between">
+        <% if @user.events.length() > 0%>
+
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>My Created Events</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @user.events.each do |event| %>
+                      <li class="list-group-item d-flex">
+                          <%= link_to event.title, event, class:"mr-3"  %>
+                          <%= link_to 'Edit', edit_event_path(event), class:"mr-3" %>
+                          <%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' }  %>
+                      </li>
+                  <% end %>
+
+              </ul>
+            </div>
+
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>Previously attended events</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @past_events.each do |event| %>
+                      <li class="list-group-item">
+                          <%= link_to event.title, event %>
+                      </li>
+                  <% end %>
+              </ul>
+            </div>
+
+
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>Upcoming events</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @upcoming_events.each do |event| %>
+                      <li class="list-group-item d-flex">
+                          <%= link_to event.title, event, class:"mr-2" %>
+
+                          <%= button_to "Delete Invitation",
+                              rsvp_path(user_id: current_user.id , event_id: event.id),
+                              method: :delete,
+                              class:"btn btn-danger " %>
+                      </li>
+                  <% end %>
+              </ul>
+            </div>
+
+        <% end %>
     </div>
 
-    <div class="mt-3 d-flex justify-content-between">
-    <% if @user.events.length() > 0%>
+    <div class="row">
 
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>My Created Events</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @user.events.each do |event| %>
-                  <li class="list-group-item d-flex">
-                      <%= link_to event.title, event, class:"mr-3"  %>
-                      <%= link_to 'Edit', edit_event_path(event) %>
-                  </li>
-              <% end %>
+        <div class="mt-5 d-flex justify-content-between">
 
-          </ul>
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>Pending Invites</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @pending_events.each do |event| %>
+                      <li class="list-group-item d-flex">
+                          <%= link_to event.title, event, class:"mr-3"  %>
+
+                              <%= link_to "Attend",
+                                  rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                                      attendee.user_id == current_user.id
+                                  }[0].id,
+                                  event_id: @event.id, user_id: current_user.id, status: "Attending"),
+                                  method: :patch
+                              %>
+
+
+                          <%= link_to "Decline",
+                              rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                                  attendee.user_id == current_user.id
+                              }[0].id,
+                              event_id: @event.id, user_id: current_user.id, status: "Declined"),
+                              method: :patch
+                          %>
+
+                      </li>
+                  <% end %>
+
+              </ul>
+            </div>
+
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>Attending</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @attending_events.each do |event| %>
+                      <li class="list-group-item d-flex">
+                          <%= link_to event.title, event, class:"mr-3"  %>
+                          <a>Decline</a>
+                      </li>
+                  <% end %>
+
+              </ul>
+            </div>
+
+            <div class="card col-3" >
+              <div class="card-header text-center">
+                <h4>Declined Events</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                  <% @declined_events.each do |event| %>
+                      <li class="list-group-item d-flex">
+                          <a>Attend</a>
+                      </li>
+                  <% end %>
+
+              </ul>
+            </div>
         </div>
 
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>Previously attended events</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @past_events.each do |event| %>
-                  <li class="list-group-item">
-                      <%= link_to event.title, event %>
-                  </li>
-              <% end %>
-          </ul>
-        </div>
-
-
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>Upcoming events</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @upcoming_events.each do |event| %>
-                  <li class="list-group-item d-flex">
-                      <%= link_to event.title, event, class:"mr-2" %>
-
-                      <%= button_to "Delete Invitation",
-                          rsvp_path(user_id: current_user.id , event_id: event.id),
-                          method: :delete,
-                          class:"btn btn-danger " %>
-                  </li>
-              <% end %>
-          </ul>
-        </div>
-
-    <% end %>
-    </div>
-    </div>
-</div>
-
-<div class="row">
-
-    <div class="mt-3 d-flex justify-content-between">
-
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>Pending Invites</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @user.events.each do |event| %>
-                  <li class="list-group-item d-flex">
-                      <%= link_to event.title, event, class:"mr-3"  %>
-                      <%= link_to 'Edit', edit_event_path(event) %>
-                  </li>
-              <% end %>
-
-          </ul>
-        </div>
-
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>Attending</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @user.events.each do |event| %>
-                  <li class="list-group-item d-flex">
-                      <%= link_to event.title, event, class:"mr-3"  %>
-                      <%= link_to 'Edit', edit_event_path(event) %>
-                  </li>
-              <% end %>
-
-          </ul>
-        </div>
-
-        <div class="card col-3" >
-          <div class="card-header text-center">
-            <h4>Declined Events</h4>
-          </div>
-          <ul class="list-group list-group-flush">
-              <% @user.events.each do |event| %>
-                  <li class="list-group-item d-flex">
-                      <%= link_to event.title, event, class:"mr-3"  %>
-                      <%= link_to 'Edit', edit_event_path(event) %>
-                  </li>
-              <% end %>
-
-          </ul>
-        </div>
     </div>
 
+
+    </div>
 </div>

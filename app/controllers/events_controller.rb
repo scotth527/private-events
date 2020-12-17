@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+  before_action :set_event, only: [:show, :edit, :update, :delete, :destroy]
   before_action :authenticate_user!, only:[:new, :create, :index, :edit, :show, :update, :delete]
 
   def show
@@ -43,7 +44,7 @@ class EventsController < ApplicationController
  end
 
  def update
-     @event = Event.find_by_id(params[:id])
+
      respond_to do |format|
        if @event.update(post_params)
          format.html { redirect_to @event, notice: 'Event was successfully updated.' }
@@ -56,11 +57,24 @@ class EventsController < ApplicationController
  end
 
  def edit
-     @event = Event.find_by_id(params[:id])
+
  end
 
+ def destroy
+     p "Destroyed event"
+     p @event
+     @event.destroy
+     respond_to do |format|
+       format.html { redirect_to user_url(current_user), notice: 'Event was successfully destroyed.' }
+       format.json { head :no_content }
+     end
+ end
 
  private
+
+     def set_event
+       @event = Event.find(params[:id])
+     end
 
     # Only allow a list of trusted parameters through.
     def post_params

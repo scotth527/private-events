@@ -40,8 +40,6 @@
         <div>
         <%= button_to "Attend",
             rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                p "Attendee"
-                p attendee
                 attendee.user_id == current_user.id
             }[0].id,
             event_id: @event.id, user_id: current_user.id, status: "Attending"),
@@ -50,8 +48,6 @@
 
         <%= button_to "Decline",
             rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                p "Attendee"
-                p attendee
                 attendee.user_id == current_user.id
             }[0].id,
             event_id: @event.id, user_id: current_user.id, status: "Declined"),

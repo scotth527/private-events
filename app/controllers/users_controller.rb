@@ -7,9 +7,23 @@ class UsersController < ApplicationController
           @user = User.find(params[:id])
 
           @past_events = @user.attended_events.past_events(Date.today).order('date DESC')
+
+          ##All events that have been invited to the user that have yet to happen
           @upcoming_events = @user.attended_events.upcoming_events(Date.today).sort_by &:date
-          p "Upcoming events"
-          p @upcoming_events
+          @attending_events = @user.attended_events.upcoming_events(Date.today).select {
+              |event|
+              p "Event informaiton"
+              p event
+              # event.status == "Attending"
+          }.sort_by &:date
+          @declined_events = @user.attended_events.upcoming_events(Date.today).select {
+              |event|
+              # event.status == "Declined"
+          }.sort_by &:date
+          @pending_events = @user.attended_events.upcoming_events(Date.today).select {
+              |event|
+              # event.status != "Attending" && event.status != "Declined"
+          }.sort_by &:date
         else
           content_not_found
         end

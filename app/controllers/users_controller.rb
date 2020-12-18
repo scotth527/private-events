@@ -10,20 +10,25 @@ class UsersController < ApplicationController
 
           ##All events that have been invited to the user that have yet to happen
           @upcoming_events = @user.attended_events.upcoming_events(Date.today).sort_by &:date
-          @attending_events = @user.attended_events.upcoming_events(Date.today).select {
+          p "upcoming Events"
+          p @upcoming_events
+          p "User rsvps"
+          p @user.rsvps
+
+          @attending_events = @user.rsvps.select {
               |event|
               p "Event informaiton"
               p event
-              # event.status == "Attending"
-          }.sort_by &:date
-          @declined_events = @user.attended_events.upcoming_events(Date.today).select {
+              event.status == "Attending"
+          }
+          @declined_events = @user.rsvps.select {
               |event|
-              # event.status == "Declined"
-          }.sort_by &:date
-          @pending_events = @user.attended_events.upcoming_events(Date.today).select {
+               event.status == "Declined"
+          }
+          @pending_events = @user.rsvps.select {
               |event|
-              # event.status != "Attending" && event.status != "Declined"
-          }.sort_by &:date
+              event.status != "Attending" && event.status != "Declined"
+          }
         else
           content_not_found
         end

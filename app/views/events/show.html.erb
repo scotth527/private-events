@@ -38,21 +38,27 @@
     <%# Check if user is already been invited %>
     <% if @event.attendees.any? {|attendee| attendee.id == current_user.id } %>
         <div>
-        <%= button_to "Attend",
-            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                attendee.user_id == current_user.id
-            }[0].id,
-            event_id: @event.id, user_id: current_user.id, status: "Attending"),
-            method: :patch,
-            class:"btn btn-success " %>
+            <% if @invitation.status != "Attending"  %>
+                <%= button_to "Attend",
+                    rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                        attendee.user_id == current_user.id
+                    }[0].id,
+                    event_id: @event.id, user_id: current_user.id, status: "Attending"),
+                    method: :patch,
+                    class:"btn btn-success " %>
+            <% end %>
 
-        <%= button_to "Decline",
-            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                attendee.user_id == current_user.id
-            }[0].id,
-            event_id: @event.id, user_id: current_user.id, status: "Declined"),
-            method: :patch,
-            class:"btn btn-danger " %>
+            <% if @invitation.status == "Attending" || @invitation.status == "Pending"  %>
+
+                <%= button_to "Decline",
+                    rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                        attendee.user_id == current_user.id
+                    }[0].id,
+                    event_id: @event.id, user_id: current_user.id, status: "Declined"),
+                    method: :patch,
+                    class:"btn btn-danger " %>
+                <% end %>
+                
         </div>
     <% end %>
 

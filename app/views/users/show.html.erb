@@ -68,24 +68,21 @@
                 <h4>Pending Invites</h4>
               </div>
               <ul class="list-group list-group-flush">
-                  <% @pending_events.each do |event| %>
+                  <% @pending_events.each do |rsvp| %>
                       <li class="list-group-item d-flex">
-                          <%= link_to event.title, event, class:"mr-3"  %>
+                          <%= link_to rsvp.attended_event.title, rsvp.attended_event, class:"mr-3"  %>
 
                               <%= link_to "Attend",
-                                  rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                                      attendee.user_id == current_user.id
-                                  }[0].id,
-                                  event_id: @event.id, user_id: current_user.id, status: "Attending"),
-                                  method: :patch
+                                  rsvp_path(rsvp_id: rsvp.id,
+                                  event_id: rsvp.attended_event.id, user_id: current_user.id, status: "Attending"),
+                                  method: :patch,
+                                  class:"mr-3"
                               %>
 
 
                           <%= link_to "Decline",
-                              rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                                  attendee.user_id == current_user.id
-                              }[0].id,
-                              event_id: @event.id, user_id: current_user.id, status: "Declined"),
+                              rsvp_path(rsvp_id: rsvp.id,
+                              event_id: rsvp.attended_event.id, user_id: current_user.id, status: "Declined"),
                               method: :patch
                           %>
 
@@ -100,10 +97,15 @@
                 <h4>Attending</h4>
               </div>
               <ul class="list-group list-group-flush">
-                  <% @attending_events.each do |event| %>
+                  <% @attending_events.each do |rsvp| %>
                       <li class="list-group-item d-flex">
-                          <%= link_to event.title, event, class:"mr-3"  %>
-                          <a>Decline</a>
+                          <%= link_to rsvp.attended_event.title, rsvp.attended_event, class:"mr-3"  %>
+                          <%= link_to "Decline",
+                              rsvp_path(rsvp_id: rsvp.id,
+                              event_id: rsvp.attended_event.id, user_id: current_user.id, status: "Declined"),
+                              method: :patch
+                          %>
+
                       </li>
                   <% end %>
 
@@ -115,9 +117,15 @@
                 <h4>Declined Events</h4>
               </div>
               <ul class="list-group list-group-flush">
-                  <% @declined_events.each do |event| %>
+                  <% @declined_events.each do |rsvp| %>
                       <li class="list-group-item d-flex">
-                          <a>Attend</a>
+                         <%= link_to rsvp.attended_event.title, rsvp.attended_event, class:"mr-3"  %>
+                         <%= link_to "Attend",
+                             rsvp_path(rsvp_id: rsvp.id,
+                             event_id: rsvp.attended_event.id, user_id: current_user.id, status: "Attending"),
+                             method: :patch,
+                             class:"mr-3"
+                         %>
                       </li>
                   <% end %>
 

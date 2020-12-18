@@ -7,6 +7,8 @@ class EventsController < ApplicationController
 
     if (@event = Event.find_by_id(params[:id])).present?
       @event = Event.find(params[:id])
+      @invitation = @event.rsvps.find_by(user_id:current_user.id)
+
 
       @users = User.all.select{ |user| user.username != current_user.username}
     else

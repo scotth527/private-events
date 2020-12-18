@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   scope :past_events, ->(today) { where("date < ? ", today) }
   scope :upcoming_events, -> (today) { where("date > ?", today) }
+  
 
   has_many :events, dependent: :destroy
   has_many :rsvps

@@ -1,115 +1,140 @@
 
-<div class="col-6 mx-auto">
-    <h1><%= @event.title %></h1>
-
-    <h4>Description: </h4>
-    <p><%= @event.description %></p>
-
-    <h4>Creator: </h4>
-    <strong><%= link_to @event.creator.username , @event.creator %></strong>
-
-    <h4>Location: </h4>
-    <div><%= @event.location %></div>
-
-    <% if @event.date.present? %>
-    <h4>Date: </h4>
-    <div><%= @event.date.strftime("%B %d %Y") %></div>
-    <% end %>
-
-    <% if (@event.creator.username == current_user.username && @users.select {
-        | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
-    }.length() > 0 ) %>
-
-        <%= form_with url: "/rsvps", method: :post do |form| %>
-          <%= form.hidden_field :event_id, :value => @event.id  %>
-          <%= form.hidden_field :status, :value => "Pending"  %>
-
-
-          <%= form.label :user_id, "Invite User:" %>
-
-          <%= form.select :user_id, options_for_select(@users.select {
-              | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
-          }.collect{ |u| [u.username, u.id] }), class:"form-control" %>
-          <%= form.submit "Invite" %>
-        <% end %>
-
-    <% end %>
-
-    <%# Check if user is already been invited %>
-    <% if @event.attendees.any? {|attendee| attendee.id == current_user.id } %>
-        <div>
-            <% if @invitation.status != "Attending"  %>
-                <%= button_to "Attend",
-                    rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                        attendee.user_id == current_user.id
-                    }[0].id,
-                    event_id: @event.id, user_id: current_user.id, status: "Attending"),
-                    method: :patch,
-                    class:"btn btn-success " %>
-            <% end %>
-
-            <% if @invitation.status == "Attending" || @invitation.status == "Pending"  %>
-
-                <%= button_to "Decline",
-                    rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
-                        attendee.user_id == current_user.id
-                    }[0].id,
-                    event_id: @event.id, user_id: current_user.id, status: "Declined"),
-                    method: :patch,
-                    class:"btn btn-danger " %>
-                <% end %>
-                
+<div class="col-8 p-5 mx-auto mt-5 card">
+    <div class="d-flex justify-content-between border-bottom ">
+        <div >
+            <h1><%= @event.title %></h1>
+            <div class="d-flex">
+                <h4>By: <strong><%= link_to @event.creator.username , @event.creator %></strong></h4>
+            </div>
         </div>
-    <% end %>
 
-    <div>
-        <p>Number of attendees:
-            <span>
-                <%= @event.rsvps.select {|attendee| attendee.status == "Attending" }.length()  %>
-            </span>
-        </p>
-        <p>
-            <span>Attending</span>
-            <ul>
-
-                    <% @event.rsvps.each do |attendee| %>
-                        <% if attendee.status == "Attending" %>
-                            <li>
-                                <%= attendee.attendee.username %>
-                            </li>
-                        <% end %>
+        <%# Check if user is already been invited %>
+        <% if @event.attendees.any? {|attendee| attendee.id == current_user.id } %>
+            <div >
+                <h5>Respond to invite status </h5>
+                <div class="d-flex justify-content-end">
+                    <% if @invitation.status != "Attending"  %>
+                        <%= button_to "Attend",
+                            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                                attendee.user_id == current_user.id
+                            }[0].id,
+                            event_id: @event.id, user_id: current_user.id, status: "Attending"),
+                            method: :patch,
+                            class:"btn btn-success mr-3" %>
                     <% end %>
 
-            </ul>
+                    <% if @invitation.status == "Attending" || @invitation.status == "Pending"  %>
 
-            <span>Pending</span>
-            <ul>
-
-                    <% @event.rsvps.each do |attendee| %>
-                        <% if attendee.status == "Pending" %>
-                            <li>
-                                <%= attendee.attendee.username %>
-                            </li>
+                        <%= button_to "Decline",
+                            rsvp_path(rsvp_id: @event.rsvps.select { |attendee|
+                                attendee.user_id == current_user.id
+                            }[0].id,
+                            event_id: @event.id, user_id: current_user.id, status: "Declined"),
+                            method: :patch,
+                            class:"btn btn-danger " %>
                         <% end %>
-                    <% end %>
-
-            </ul>
-
-            <span>Declined</span>
-            <ul>
-
-                    <% @event.rsvps.each do |attendee| %>
-                        <% if (attendee.status != "Pending" && attendee.status != "Attending"  ) %>
-                            <li>
-                                <%= attendee.attendee.username %>
-                            </li>
-                        <% end %>
-                    <% end %>
-
-            </ul>
-        </p>
+                    </div>
+            </div>
+        <% end %>
     </div>
 
+    <div class="d-flex justify-content-between mt-4 mb-4">
+        <div class="col-6">
+            <h4>Description: </h4>
+            <p><%= @event.description %></p>
+        </div>
+        <div class="col-6 text-right">
+            <h4>Location: </h4>
+            <div><%= @event.location %></div>
+
+            <% if @event.date.present? %>
+            <h4>Date: </h4>
+            <div><%= @event.date.strftime("%B %d %Y") %></div>
+            <% end %>
+
+            <h4>Number of attendees:
+                <span>
+                    <%= @event.rsvps.select {|attendee| attendee.status == "Attending" }.length()  %>
+                </span>
+            </h4>
+        </div>
+
+    </div>
+
+
+    <div class="mt-3 list-group mb-3">
+
+        <div class="d-flex mt-3">
+            <div class="col-4">
+                <div class="text-center mb-3"><strong>Attending</strong></div>
+                <ul>
+
+                        <% @event.rsvps.each do |attendee| %>
+                            <% if attendee.status == "Attending" %>
+                                <li>
+                                    <%= attendee.attendee.username %>
+                                </li>
+                            <% end %>
+                        <% end %>
+
+                </ul>
+            </div>
+
+            <div class="col-4">
+                <div class="text-center mb-3"><strong>Pending</strong></div>
+                <ul>
+
+                        <% @event.rsvps.each do |attendee| %>
+                            <% if attendee.status == "Pending" %>
+                                <li>
+                                    <%= attendee.attendee.username %>
+                                </li>
+                            <% end %>
+                        <% end %>
+
+                </ul>
+            </div>
+
+            <div class="col-4 ">
+                <div class="text-center mb-3"> <strong>Declined</strong></div>
+                <ul>
+
+                        <% @event.rsvps.each do |attendee| %>
+                            <% if (attendee.status != "Pending" && attendee.status != "Attending"  ) %>
+                                <li>
+                                    <%= attendee.attendee.username %>
+                                </li>
+                            <% end %>
+                        <% end %>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <% if (@event.creator.username == current_user.username && @users.select {
+            | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
+        }.length() > 0 ) %>
+            <div >
+                <%= form_with url: "/rsvps", method: :post do |form| %>
+                  <%= form.hidden_field :event_id, :value => @event.id  %>
+                  <%= form.hidden_field :status, :value => "Pending"  %>
+
+                  <h5 class="text-right">
+                      <%= form.label :user_id, "Invite User:" %>
+                  </h5>
+
+                  <%= form.select :user_id, options_for_select(@users.select {
+                      | user | !@event.attendees.any? { |attendee| attendee.id == user.id  }
+                  }.collect{ |u| [u.username, u.id] }), class:"form-control" %>
+                  <%= form.submit "Invite", class:"btn btn-success" %>
+                <% end %>
+            </div>
+
+        <% end %>
+
+    </div>
 
 
 </div>
